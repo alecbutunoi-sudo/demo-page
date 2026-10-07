@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alec Sports Network</title>
     <style>
-        /* Sports Theme Base (Dark background like ESPN/Bleacher Report) */
+        /* Sports Theme Base */
         body {
             font-family: 'Trebuchet MS', Arial, sans-serif;
             background-color: #121212;
@@ -15,9 +15,9 @@
             line-height: 1.6;
         }
 
-        /* Bold Top Sports Bar */
+        /* Top Sports Bar */
         header {
-            background-color: #cc0000; /* Bold sports red */
+            background-color: #cc0000;
             color: #ffffff;
             text-align: center;
             padding: 18px 0;
@@ -28,14 +28,14 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
-        /* Main Container */
+        /* Container */
         .container {
             max-width: 750px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        /* Content Cards */
+        /* Cards */
         .card {
             background-color: #1e1e1e;
             border-left: 5px solid #cc0000;
@@ -45,7 +45,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        /* Sports Category Tag */
+        /* Category Badge */
         .badge {
             background-color: #cc0000;
             color: #ffffff;
@@ -59,7 +59,7 @@
             letter-spacing: 1px;
         }
 
-        /* Bold Headlines */
+        /* Headlines */
         h2 {
             margin-top: 0;
             color: #ffffff;
@@ -73,8 +73,9 @@
             font-size: 1.05rem;
         }
 
-        /* Featured Image */
+        /* Featured Image Styling */
         .featured-image {
+            width: 100%;
             max-width: 100%;
             height: auto;
             border-radius: 6px;
@@ -82,7 +83,7 @@
             margin: 15px 0;
         }
 
-        /* Sports Red Links */
+        /* Links */
         a {
             color: #ff4757;
             font-weight: bold;
@@ -115,24 +116,28 @@
 </head>
 <body>
 
-    <!-- Sports Network Navigation Header -->
     <header>
         Alec Sports Network
     </header>
 
     <div class="container">
         
-        <!-- Main Sports Story Card -->
+        <!-- Main Story -->
         <div class="card">
             <span class="badge">Top Story</span>
             <h2>Intro to Web Development</h2>
             
-            <img src="welcome-banner.jpg" alt="A colorful desk setup with a laptop and coffee cup" class="featured-image">
+            <!-- Direct Web Image Link -->
+            <img 
+                src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80" 
+                alt="Stadium under bright lights" 
+                class="featured-image"
+            >
             
             <p>Welcome to our class! In this course, we are learning the basics of coding and publishing our very first sports websites using HTML and GitHub Pages.</p>
         </div>
 
-        <!-- Secondary News Card -->
+        <!-- News Card -->
         <div class="card">
             <span class="badge">Trending News</span>
             <h2>Scores & Updates</h2>
@@ -142,7 +147,7 @@
             </p>
         </div>
 
-        <!-- Big Cursive Signature -->
+        <!-- Signature -->
         <div class="made-by-cursive">
             Made by Alec
         </div>
@@ -155,7 +160,3 @@
 
 </body>
 </html>
-<p>
-    Check out my favorite website: 
-    <a href="https://www.wikipedia.org" target="_blank" rel="noopener noreferrer">Visit Wikipedia</a>
-</p>
