@@ -2,36 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My First Webpage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alec Sports Network</title>
     <style>
-        /* Styles applied to the entire page body */
+        /* Sports Theme Base (Dark background like ESPN/Bleacher Report) */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            color: #333333;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
             line-height: 1.6;
         }
 
-        /* Styles applied to main headings */
-        h1 {
-            color: #2c3e50;
+        /* Bold Top Sports Bar */
+        header {
+            background-color: #cc0000; /* Bold sports red */
+            color: #ffffff;
             text-align: center;
+            padding: 18px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
-        /* Styles applied to content cards */
+        /* Main Container */
+        .container {
+            max-width: 750px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Content Cards */
+        .card {
+            background-color: #1e1e1e;
+            border-left: 5px solid #cc0000;
+            border-radius: 6px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        /* Sports Category Tag */
+        .badge {
+            background-color: #cc0000;
+            color: #ffffff;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* Bold Headlines */
+        h2 {
+            margin-top: 0;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+        }
+
         p {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #cccccc;
+            font-size: 1.05rem;
         }
 
-        /* Styles applied to links */
+        /* Featured Image */
+        .featured-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            margin: 15px 0;
+        }
+
+        /* Sports Red Links */
         a {
-            color: #2980b9;
+            color: #ff4757;
             font-weight: bold;
             text-decoration: none;
         }
@@ -40,38 +93,65 @@
             text-decoration: underline;
         }
 
-        /* Styles applied to the featured image */
-        .featured-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-            margin: 20px auto;
+        /* Big Cursive Signature */
+        .made-by-cursive {
+            font-family: 'Brush Script MT', 'Pacifico', cursive;
+            font-size: 4rem;
+            color: #ffffff;
+            text-align: center;
+            margin: 40px 0 10px 0;
+            text-shadow: 0 0 12px rgba(204, 0, 0, 0.8);
         }
 
-        /* Styles applied to the page footer credit */
         footer {
             text-align: center;
-            color: #7f8c8d;
-            font-size: 0.9em;
-            margin-top: 30px;
+            padding: 20px;
+            background-color: #0a0a0a;
+            color: #666666;
+            font-size: 0.85rem;
+            border-top: 1px solid #222222;
         }
     </style>
 </head>
 <body>
 
-    <h1>Intro to Web Development</h1>
+    <!-- Sports Network Navigation Header -->
+    <header>
+        Alec Sports Network
+    </header>
 
-    <img src="welcome-banner.jpg" alt="A colorful desk setup with a laptop and coffee cup" class="featured-image">
+    <div class="container">
+        
+        <!-- Main Sports Story Card -->
+        <div class="card">
+            <span class="badge">Top Story</span>
+            <h2>Intro to Web Development</h2>
+            
+            <img src="welcome-banner.jpg" alt="A colorful desk setup with a laptop and coffee cup" class="featured-image">
+            
+            <p>Welcome to our class! In this course, we are learning the basics of coding and publishing our very first sports websites using HTML and GitHub Pages.</p>
+        </div>
 
-    <p>Welcome to our class! In this course, we are learning the basics of coding and publishing our very first websites using HTML and GitHub Pages.</p>
+        <!-- Secondary News Card -->
+        <div class="card">
+            <span class="badge">Trending News</span>
+            <h2>Scores & Updates</h2>
+            <p>
+                Check out the latest live scores and news on my favorite sports site: 
+                <a href="https://www.espn.com" target="_blank" rel="noopener noreferrer">Visit ESPN</a>
+            </p>
+        </div>
 
-    <p>
-        Check out my favorite website: 
-        <a href="https://www.wikipedia.org" target="_blank" rel="noopener noreferrer">Visit Wikipedia</a>
-    </p>
+        <!-- Big Cursive Signature -->
+        <div class="made-by-cursive">
+            Made by Alec
+        </div>
 
-    <footer>Created by Alec</footer>
+    </div>
+
+    <footer>
+        <p>&copy; Alec Sports Network. All rights reserved.</p>
+    </footer>
 
 </body>
 </html>
