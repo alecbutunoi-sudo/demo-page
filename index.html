@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alec's Sports Arcade</title>
+    <title>Alex (goofy ahh babo mitt) Fam, could never</title>
     <style>
-        /* Dark ESPN/Bleacher Report Theme */
+        /* Base Dark Arcade Theme */
         body {
             font-family: 'Trebuchet MS', Arial, sans-serif;
-            background-color: #0d0d11;
+            background-color: #0d0d12;
             color: #ffffff;
             margin: 0;
             padding: 0;
@@ -19,35 +19,36 @@
             user-select: none;
         }
 
-        /* Top Bar Header */
+        /* Top Header */
         header {
             width: 100%;
             background: linear-gradient(135deg, #cc0000 0%, #880000 100%);
             color: #ffffff;
             text-align: center;
-            padding: 16px 0;
-            font-size: 2.2rem;
+            padding: 16px 10px;
+            font-size: 1.8rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             box-shadow: 0 4px 15px rgba(204, 0, 0, 0.4);
+            word-wrap: break-word;
         }
 
         .game-container {
             max-width: 720px;
             width: 95%;
-            margin: 20px auto;
+            margin: 20px auto 10px auto;
             text-align: center;
         }
 
-        /* Scoreboard Panel */
+        /* Basketball Scoreboard */
         .scoreboard {
             display: flex;
             justify-content: space-around;
             background-color: #181820;
             border-top: 4px solid #cc0000;
             border-radius: 10px 10px 0 0;
-            padding: 14px;
+            padding: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
@@ -57,7 +58,7 @@
         }
 
         .score-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             color: #888899;
             letter-spacing: 1px;
@@ -65,13 +66,12 @@
         }
 
         .score-value {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #ff3344;
-            text-shadow: 0 0 10px rgba(255, 51, 68, 0.4);
         }
 
-        /* Game Canvas Frame */
+        /* Basketball Canvas */
         #gameCanvas {
             background: linear-gradient(to bottom, #111428 0%, #1a1e36 60%, #0d1120 100%);
             border-radius: 0 0 10px 10px;
@@ -85,60 +85,273 @@
             display: block;
         }
 
-        /* Controls Section */
+        /* Controls Panel */
         .controls {
-            margin-top: 18px;
+            margin-top: 15px;
             background-color: #181820;
-            padding: 16px;
+            padding: 15px;
             border-radius: 8px;
             border: 1px solid #2a2a38;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         .controls p {
-            margin: 0 0 12px 0;
+            margin: 0 0 10px 0;
             color: #cccccc;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .btn {
-            background: linear-gradient(135deg, #cc0000 0%, #ee2222 100%);
+            background: linear-gradient(135deg, #cc0000 0%, #ff2222 100%);
             color: #ffffff;
             border: none;
-            padding: 12px 28px;
-            font-size: 1.1rem;
+            padding: 10px 24px;
+            font-size: 1rem;
             font-weight: bold;
             text-transform: uppercase;
             border-radius: 6px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(204, 0, 0, 0.4);
-            transition: transform 0.1s ease, background 0.2s ease;
+            transition: transform 0.1s ease;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            background: linear-gradient(135deg, #dd1111 0%, #ff3333 100%);
+            background: linear-gradient(135deg, #dd1111 0%, #ff4444 100%);
         }
 
-        .btn:active {
-            transform: translateY(1px);
+        .btn-secondary {
+            background: #2a2a3a;
+            box-shadow: none;
         }
 
-        /* Cursive Signature */
+        .btn-secondary:hover {
+            background: #3a3a4c;
+        }
+
+        /* Section Divider */
+        .divider {
+            width: 100%;
+            max-width: 720px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #cc0000, transparent);
+            margin: 35px 0;
+        }
+
+        /* Wordle Styles */
+        .wordle-section {
+            max-width: 520px;
+            width: 95%;
+            margin: 0 auto 30px auto;
+            background-color: #14141d;
+            border: 2px solid #282838;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        .wordle-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0 0 5px 0;
+            letter-spacing: 2px;
+        }
+
+        .wordle-subtitle {
+            color: #8888aa;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wordle-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .wordle-toast {
+            min-height: 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+
+        .clue-box {
+            background: #1e1e2d;
+            border-left: 4px solid #ffcc00;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #dddddd;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .wordle-grid {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 6px;
+            margin: 0 auto 20px auto;
+            max-width: 320px;
+        }
+
+        .wordle-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .wordle-cell {
+            aspect-ratio: 1 / 1;
+            border: 2px solid #2e2e42;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ffffff;
+            background-color: #0f0f17;
+            transition: transform 0.1s ease;
+        }
+
+        .wordle-cell.pop {
+            animation: pop 0.1s ease-in-out;
+            border-color: #666688;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .wordle-cell.flip {
+            animation: flip 0.5s ease forwards;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateX(0deg); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0deg); }
+        }
+
+        .wordle-cell.correct {
+            background-color: #2e7d32 !important;
+            border-color: #2e7d32 !important;
+        }
+
+        .wordle-cell.present {
+            background-color: #f57f17 !important;
+            border-color: #f57f17 !important;
+        }
+
+        .wordle-cell.absent {
+            background-color: #373740 !important;
+            border-color: #373740 !important;
+        }
+
+        .wordle-row.shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .key {
+            background-color: #282838;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 12px 0;
+            flex: 1;
+            max-width: 40px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s ease;
+        }
+
+        .key.wide {
+            max-width: 65px;
+            font-size: 0.75rem;
+        }
+
+        .key:hover {
+            background-color: #3a3a4e;
+        }
+
+        .key.correct { background-color: #2e7d32 !important; }
+        .key.present { background-color: #f57f17 !important; }
+        .key.absent { background-color: #22222b !important; color: #555566; }
+
+        .wordle-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #1a1a26;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #282838;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-num {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #cc0000;
+        }
+
+        .stat-lbl {
+            font-size: 0.65rem;
+            color: #8888aa;
+            text-transform: uppercase;
+        }
+
+        /* Signature */
         .made-by-cursive {
             font-family: 'Brush Script MT', 'Pacifico', cursive;
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             color: #ffffff;
             text-align: center;
             margin: 25px 0 10px 0;
-            text-shadow: 0 0 15px rgba(204, 0, 0, 0.9);
+            text-shadow: 0 0 15px rgba(204, 0, 0, 0.8);
         }
 
         footer {
             margin-top: auto;
             width: 100%;
             text-align: center;
-            padding: 16px;
+            padding: 15px;
             background-color: #08080c;
             color: #555566;
             font-size: 0.85rem;
@@ -148,11 +361,12 @@
 </head>
 <body>
 
-    <header>Alec Sports Arcade</header>
+    <!-- UPDATED TOP TITLE -->
+    <header>Alex (goofy ahh babo mitt) Fam, could never</header>
 
     <div class="game-container">
         
-        <!-- Scoreboard Header -->
+        <!-- Basketball Scoreboard -->
         <div class="scoreboard">
             <div class="score-box">
                 <span class="score-label">Score</span>
@@ -172,264 +386,206 @@
             </div>
         </div>
 
-        <!-- Main Game Screen -->
+        <!-- Basketball Canvas -->
         <canvas id="gameCanvas" width="720" height="420"></canvas>
 
-        <!-- Control Bar -->
+        <!-- Controls -->
         <div class="controls">
-            <p>🏀 <strong>Controls:</strong> Drag back on the ball to aim the shot trajectory, then release to shoot!</p>
-            <button id="restartBtn" class="btn">Start Game</button>
-        </div>
-
-        <!-- Signature -->
-        <div class="made-by-cursive">
-            Made by Alec
+            <p>🏀 <strong>Mini Basketball:</strong> Click/drag back on the ball to aim, then release to shoot!</p>
+            <button id="startBtn" class="btn">Start Game</button>
         </div>
 
     </div>
 
+    <!-- Divider Line -->
+    <div class="divider"></div>
+
+    <!-- SPORTS WORDLE SECTION -->
+    <div class="wordle-section">
+        <h2 class="wordle-title">Sports Wordle</h2>
+        <div class="wordle-subtitle">Guess the 5-Letter Sports Word</div>
+
+        <div class="wordle-actions">
+            <button id="wNewBtn" class="btn">New Word</button>
+            <button id="wHintBtn" class="btn btn-secondary">💡 Hint</button>
+        </div>
+
+        <div id="wordleToast" class="wordle-toast">Guess 1 of 6</div>
+        <div id="clueBox" class="clue-box"></div>
+
+        <div id="wordleGrid" class="wordle-grid"></div>
+
+        <div id="keyboard" class="keyboard"></div>
+
+        <div class="wordle-stats">
+            <div class="stat-item">
+                <span id="wPlayed" class="stat-num">0</span>
+                <span class="stat-lbl">Played</span>
+            </div>
+            <div class="stat-item">
+                <span id="wWins" class="stat-num">0</span>
+                <span class="stat-lbl">Wins</span>
+            </div>
+            <div class="stat-item">
+                <span id="wStreak" class="stat-num">0</span>
+                <span class="stat-lbl">Streak</span>
+            </div>
+            <div class="stat-item">
+                <span id="wBest" class="stat-num">0</span>
+                <span class="stat-lbl">Best</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cursive Signature -->
+    <div class="made-by-cursive">
+        Made by Alec
+    </div>
+
     <footer>
-        &copy; Alec Sports Network. Built with HTML5 & Canvas Physics.
+        &copy; Alec Sports Network. Built with HTML5 Canvas & JavaScript.
     </footer>
 
-    <!-- Game Logic -->
     <script>
+        /* 1. BASKETBALL ARCADE ENGINE */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Scoreboard Elements
         const scoreEl = document.getElementById('score');
         const streakEl = document.getElementById('streak');
         const timerEl = document.getElementById('timer');
         const highScoreEl = document.getElementById('highScore');
-        const restartBtn = document.getElementById('restartBtn');
+        const startBtn = document.getElementById('startBtn');
 
-        // Game State Variables
         let score = 0;
         let streak = 0;
-        let highScore = localStorage.getItem('alec_bb_highscore') || 0;
-        highScoreEl.textContent = highScore;
-
+        let highScore = 0;
         let timeLeft = 60;
         let gameActive = false;
         let timerInterval = null;
 
-        // Audio Engine (Web Audio API)
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        try { highScore = parseInt(localStorage.getItem('alec_bb_hs')) || 0; } catch(e) {}
+        highScoreEl.textContent = highScore;
+
         let audioCtx = null;
-
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
         function playSound(type) {
-            if (!audioCtx || audioCtx.state !== 'running') return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            try {
+                if (!audioCtx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) audioCtx = new AudioCtx();
+                }
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                if (!audioCtx || audioCtx.state !== 'running') return;
 
-            const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
 
-            if (type === 'swish') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(500, now);
-                osc.frequency.exponentialRampToValueAtTime(1400, now + 0.18);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-                osc.start(now);
-                osc.stop(now + 0.18);
-            } else if (type === 'bounce') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.exponentialRampToValueAtTime(60, now + 0.1);
-                gain.gain.setValueAtTime(0.4, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                osc.start(now);
-                osc.stop(now + 0.1);
-            } else if (type === 'score') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.08);
-                osc.frequency.setValueAtTime(783.99, now + 0.16);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'fire') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-                osc.start(now);
-                osc.stop(now + 0.25);
-            }
+                if (type === 'swish') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(500, now);
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'bounce') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now); osc.stop(now + 0.1);
+                } else if (type === 'score') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
+                }
+            } catch(e) {}
         }
 
-        // Ball Setup
         const ballOrigin = { x: 130, y: 310, radius: 18 };
-
-        let ball = {
-            x: ballOrigin.x,
-            y: ballOrigin.y,
-            vx: 0,
-            vy: 0,
-            rotation: 0,
-            isDragging: false,
-            isFlying: false,
-            scored: false,
-            touchedRim: false
-        };
-
-        let dragCurrent = { x: ballOrigin.x, y: ballOrigin.y };
-
-        // Hoop & Court Dimensions
-        const hoop = {
-            x: 540,
-            y: 165,
-            width: 62,
-            height: 8,
-            backboardX: 602,
-            backboardY: 70,
-            backboardW: 14,
-            backboardH: 120
-        };
-
+        let ball = { x: ballOrigin.x, y: ballOrigin.y, vx: 0, vy: 0, isDragging: false, isFlying: false, scored: false, touchedRim: false };
+        const hoop = { x: 540, y: 165, width: 60, height: 8, backboardX: 600, backboardY: 70, backboardW: 14, backboardH: 120 };
         const gravity = 0.45;
-        let netWiggle = 0;
-
-        // Particles & Floating Text Effects
-        let particles = [];
         let floatingTexts = [];
 
-        function addScoreEffect(text, x, y, color = '#ffeb3b') {
-            floatingTexts.push({
-                text: text,
-                x: x,
-                y: y,
-                alpha: 1.0,
-                color: color
-            });
-
-            // Burst particles
-            for (let i = 0; i < 16; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 2 + Math.random() * 5;
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    radius: 3 + Math.random() * 3,
-                    alpha: 1.0,
-                    color: color
-                });
-            }
+        function addScoreText(txt, x, y, col) {
+            floatingTexts.push({ text: txt, x: x, y: y, alpha: 1.0, color: col });
         }
 
-        // Get relative canvas coordinates
         function getCanvasPos(evt) {
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
+            if (!rect.width || !rect.height) return { x: 0, y: 0 };
             return {
-                x: (evt.clientX - rect.left) * scaleX,
-                y: (evt.clientY - rect.top) * scaleY
+                x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+                y: (evt.clientY - rect.top) * (canvas.height / rect.height)
             };
         }
 
-        // Input Handling
         function handleStart(e) {
-            initAudio();
             if (ball.isFlying) return;
-
             const pos = getCanvasPos(e);
-            const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-
-            if (dist < 90 || pos.x < 240) {
-                if (!gameActive && timeLeft === 60) {
-                    startGame();
-                }
+            if (Math.hypot(pos.x - ball.x, pos.y - ball.y) < 90 || pos.x < 240) {
+                if (!gameActive && timeLeft === 60) startGame();
                 ball.isDragging = true;
-                dragCurrent = pos;
+                ball.x = pos.x; ball.y = pos.y;
             }
         }
 
         function handleMove(e) {
             if (!ball.isDragging) return;
-            dragCurrent = getCanvasPos(e);
-
-            // Distance limit for slingshot pull
-            const dx = dragCurrent.x - ballOrigin.x;
-            const dy = dragCurrent.y - ballOrigin.y;
+            const pos = getCanvasPos(e);
+            const dx = pos.x - ballOrigin.x;
+            const dy = pos.y - ballOrigin.y;
             const dist = Math.hypot(dx, dy);
-            const maxPull = 125;
-
-            if (dist > maxPull) {
+            if (dist > 120) {
                 const angle = Math.atan2(dy, dx);
-                dragCurrent.x = ballOrigin.x + Math.cos(angle) * maxPull;
-                dragCurrent.y = ballOrigin.y + Math.sin(angle) * maxPull;
+                ball.x = ballOrigin.x + Math.cos(angle) * 120;
+                ball.y = ballOrigin.y + Math.sin(angle) * 120;
+            } else {
+                ball.x = pos.x; ball.y = pos.y;
             }
-
-            ball.x = dragCurrent.x;
-            ball.y = dragCurrent.y;
         }
 
         function handleEnd() {
             if (!ball.isDragging) return;
             ball.isDragging = false;
-            ball.isFlying = true;
-
-            // Launch Velocity based on drag distance
             const dx = ballOrigin.x - ball.x;
             const dy = ballOrigin.y - ball.y;
-            ball.vx = dx * 0.185;
-            ball.vy = dy * 0.185;
+            if (Math.hypot(dx, dy) < 15) { resetBall(); return; }
+            ball.isFlying = true;
+            ball.vx = dx * 0.18;
+            ball.vy = dy * 0.18;
         }
 
-        // Listeners
         canvas.addEventListener('mousedown', handleStart);
         canvas.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', handleEnd);
-
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handleStart(e.touches[0]);
-        }, { passive: false });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            handleMove(e.touches[0]);
-        }, { passive: false });
-
+        canvas.addEventListener('touchstart', (e) => { if (e.touches.length) handleStart(e.touches[0]); }, { passive: true });
+        canvas.addEventListener('touchmove', (e) => { if (e.touches.length) handleMove(e.touches[0]); }, { passive: true });
         window.addEventListener('touchend', handleEnd);
 
-        // Timer and Score Management
         function startGame() {
-            score = 0;
-            streak = 0;
-            timeLeft = 60;
-            gameActive = true;
-            scoreEl.textContent = score;
-            streakEl.textContent = streak;
-            timerEl.textContent = timeLeft;
-            restartBtn.textContent = "Restart Game";
+            score = 0; streak = 0; timeLeft = 60; gameActive = true;
+            scoreEl.textContent = score; streakEl.textContent = streak; timerEl.textContent = timeLeft;
+            startBtn.textContent = "Restart Game";
             resetBall();
-
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!gameActive) return;
                 timeLeft--;
                 timerEl.textContent = timeLeft;
-
                 if (timeLeft <= 0) {
                     gameActive = false;
                     clearInterval(timerInterval);
                     if (score > highScore) {
                         highScore = score;
-                        localStorage.setItem('alec_bb_highscore', highScore);
+                        try { localStorage.setItem('alec_bb_hs', highScore); } catch(e) {}
                         highScoreEl.textContent = highScore;
                     }
                 }
@@ -437,270 +593,332 @@
         }
 
         function resetBall() {
-            ball.x = ballOrigin.x;
-            ball.y = ballOrigin.y;
-            ball.vx = 0;
-            ball.vy = 0;
-            ball.rotation = 0;
-            ball.isDragging = false;
-            ball.isFlying = false;
-            ball.scored = false;
-            ball.touchedRim = false;
+            ball.x = ballOrigin.x; ball.y = ballOrigin.y;
+            ball.vx = 0; ball.vy = 0;
+            ball.isDragging = false; ball.isFlying = false;
+            ball.scored = false; ball.touchedRim = false;
         }
 
-        // Physics Updates
         function update() {
-            // Net animation decay
-            if (netWiggle > 0) netWiggle -= 0.5;
-
-            // Update particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.025;
-                if (p.alpha <= 0) particles.splice(i, 1);
-            }
-
-            // Update floating score texts
             for (let i = floatingTexts.length - 1; i >= 0; i--) {
                 let ft = floatingTexts[i];
-                ft.y -= 1.2;
-                ft.alpha -= 0.018;
+                ft.y -= 1; ft.alpha -= 0.02;
                 if (ft.alpha <= 0) floatingTexts.splice(i, 1);
             }
-
             if (ball.isFlying) {
-                ball.x += ball.vx;
-                ball.y += ball.vy;
-                ball.vy += gravity;
-                ball.rotation += ball.vx * 0.05;
+                ball.x += ball.vx; ball.y += ball.vy; ball.vy += gravity;
 
-                // Fire mode particle trail
-                if (streak >= 3 && Math.random() < 0.6) {
-                    particles.push({
-                        x: ball.x + (Math.random() - 0.5) * 10,
-                        y: ball.y + (Math.random() - 0.5) * 10,
-                        vx: -ball.vx * 0.2,
-                        vy: -ball.vy * 0.2,
-                        radius: 4 + Math.random() * 4,
-                        alpha: 1.0,
-                        color: Math.random() > 0.5 ? '#ff4400' : '#ffbb00'
-                    });
-                }
-
-                // Backboard Collision
                 if (ball.x + ballOrigin.radius > hoop.backboardX &&
                     ball.x - ballOrigin.radius < hoop.backboardX + hoop.backboardW &&
-                    ball.y > hoop.backboardY &&
-                    ball.y < hoop.backboardY + hoop.backboardH) {
+                    ball.y > hoop.backboardY && ball.y < hoop.backboardY + hoop.backboardH) {
                     ball.vx = -Math.abs(ball.vx) * 0.65;
                     ball.x = hoop.backboardX - ballOrigin.radius;
-                    ball.touchedRim = true;
-                    playSound('bounce');
+                    ball.touchedRim = true; playSound('bounce');
                 }
 
-                // Front & Back Rim Collisions
-                const rims = [
-                    { x: hoop.x, y: hoop.y },
-                    { x: hoop.x + hoop.width, y: hoop.y }
-                ];
-
-                rims.forEach(rim => {
-                    const dist = Math.hypot(ball.x - rim.x, ball.y - rim.y);
-                    if (dist < ballOrigin.radius + 4) {
+                [{ x: hoop.x, y: hoop.y }, { x: hoop.x + hoop.width, y: hoop.y }].forEach(rim => {
+                    if (Math.hypot(ball.x - rim.x, ball.y - rim.y) < ballOrigin.radius + 4) {
                         ball.touchedRim = true;
                         const angle = Math.atan2(ball.y - rim.y, ball.x - rim.x);
                         const speed = Math.hypot(ball.vx, ball.vy) * 0.6;
-                        ball.vx = Math.cos(angle) * speed;
-                        ball.vy = Math.sin(angle) * speed;
+                        ball.vx = Math.cos(angle) * speed; ball.vy = Math.sin(angle) * speed;
                         playSound('bounce');
                     }
                 });
 
-                // Score Detection
-                if (!ball.scored &&
-                    ball.vy > 0 &&
-                    ball.x > hoop.x + 4 &&
-                    ball.x < hoop.x + hoop.width - 4 &&
-                    ball.y > hoop.y - 4 &&
-                    ball.y < hoop.y + hoop.height + 12) {
-                    
+                if (!ball.scored && ball.vy > 0 && ball.x > hoop.x + 4 && ball.x < hoop.x + hoop.width - 4 && ball.y > hoop.y - 4 && ball.y < hoop.y + hoop.height + 12) {
                     ball.scored = true;
-                    netWiggle = 12;
-
                     if (gameActive) {
-                        streak++;
-                        streakEl.textContent = streak;
-
-                        let points = 2;
-                        let text = "+2";
-
-                        if (!ball.touchedRim) {
-                            points = 3;
-                            text = "SWISH! +3";
-                            playSound('swish');
-                        } else {
-                            playSound('score');
-                        }
-
-                        if (streak >= 3) {
-                            points *= 2;
-                            text += " 🔥 x2";
-                            playSound('fire');
-                        }
-
-                        score += points;
-                        scoreEl.textContent = score;
-
-                        addScoreEffect(text, hoop.x + 30, hoop.y - 20, streak >= 3 ? '#ff3300' : '#ffeb3b');
+                        streak++; streakEl.textContent = streak;
+                        let pts = 2, label = "+2";
+                        if (!ball.touchedRim) { pts = 3; label = "SWISH! +3"; playSound('swish'); } else { playSound('score'); }
+                        if (streak >= 3) { pts *= 2; label += " 🔥 x2"; }
+                        score += pts; scoreEl.textContent = score;
+                        addScoreText(label, hoop.x + 30, hoop.y - 15, streak >= 3 ? '#ff3300' : '#ffeb3b');
                     }
                 }
 
-                // Reset when ball leaves screen
                 if (ball.y > canvas.height + 40 || ball.x > canvas.width + 50 || ball.x < -50) {
-                    if (!ball.scored) {
-                        streak = 0;
-                        streakEl.textContent = streak;
-                    }
+                    if (!ball.scored) { streak = 0; streakEl.textContent = streak; }
                     resetBall();
                 }
             }
         }
 
-        // Render Canvas Scene
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#b33923'; ctx.fillRect(0, 380, canvas.width, 40);
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 377, canvas.width, 3);
+            ctx.fillStyle = '#444455'; ctx.fillRect(hoop.backboardX + 4, hoop.backboardY + hoop.backboardH, 8, canvas.height - hoop.backboardY);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; ctx.fillRect(hoop.backboardX, hoop.backboardY, hoop.backboardW, hoop.backboardH);
+            ctx.strokeStyle = '#cc0000'; ctx.lineWidth = 3; ctx.strokeRect(hoop.backboardX + 2, hoop.backboardY + 32, 10, 42);
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(hoop.x, hoop.y); ctx.lineTo(hoop.x + 10, hoop.y + 36); ctx.lineTo(hoop.x + hoop.width - 10, hoop.y + 36); ctx.lineTo(hoop.x + hoop.width, hoop.y); ctx.stroke();
+            ctx.fillStyle = '#ff5500'; ctx.fillRect(hoop.x - 4, hoop.y - 2, hoop.width + 8, hoop.height);
 
-            // Court Floor
-            ctx.fillStyle = '#b33923';
-            ctx.fillRect(0, 380, canvas.width, 40);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 377, canvas.width, 3);
-
-            // Backboard Support Structure
-            ctx.fillStyle = '#444455';
-            ctx.fillRect(hoop.backboardX + 4, hoop.backboardY + hoop.backboardH, 8, canvas.height - hoop.backboardY);
-
-            // Backboard Glass
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-            ctx.fillRect(hoop.backboardX, hoop.backboardY, hoop.backboardW, hoop.backboardH);
-            ctx.strokeStyle = '#cc0000';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(hoop.backboardX + 2, hoop.backboardY + 32, 10, 42);
-
-            // Wiggling Net Mesh
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            const wiggleOffset = Math.sin(Date.now() * 0.05) * netWiggle;
-            ctx.moveTo(hoop.x, hoop.y);
-            ctx.lineTo(hoop.x + 12 + wiggleOffset, hoop.y + 38);
-            ctx.lineTo(hoop.x + hoop.width - 12 + wiggleOffset, hoop.y + 38);
-            ctx.lineTo(hoop.x + hoop.width, hoop.y);
-            ctx.stroke();
-
-            // Rim
-            ctx.fillStyle = '#ff5500';
-            ctx.fillRect(hoop.x - 4, hoop.y - 2, hoop.width + 8, hoop.height);
-
-            // Trajectory Dotted Path Prediction
             if (ball.isDragging) {
-                let simX = ballOrigin.x;
-                let simY = ballOrigin.y;
-                let simVx = (ballOrigin.x - ball.x) * 0.185;
-                let simVy = (ballOrigin.y - ball.y) * 0.185;
-
+                let simX = ballOrigin.x, simY = ballOrigin.y, simVx = (ballOrigin.x - ball.x) * 0.18, simVy = (ballOrigin.y - ball.y) * 0.18;
                 ctx.fillStyle = '#ff3344';
-                for (let i = 0; i < 22; i++) {
-                    simX += simVx;
-                    simY += simVy;
-                    simVy += gravity;
-
-                    ctx.beginPath();
-                    ctx.arc(simX, simY, 3.5, 0, Math.PI * 2);
-                    ctx.fill();
+                for (let i = 0; i < 20; i++) {
+                    simX += simVx; simY += simVy; simVy += gravity;
+                    ctx.beginPath(); ctx.arc(simX, simY, 3, 0, Math.PI * 2); ctx.fill();
                 }
             }
 
-            // Draw Particles
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, p.alpha);
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ballOrigin.radius, 0, Math.PI * 2);
+            ctx.fillStyle = streak >= 3 ? '#ff4400' : '#e66000'; ctx.fill();
+            ctx.strokeStyle = '#111111'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ballOrigin.radius, -Math.PI / 3, Math.PI / 3); ctx.stroke();
 
-            // Draw Basketball
-            ctx.save();
-            ctx.translate(ball.x, ball.y);
-            ctx.rotate(ball.rotation);
-
-            // Glow effect on streak
-            if (streak >= 3) {
-                ctx.shadowColor = '#ff4400';
-                ctx.shadowBlur = 20;
-            }
-
-            // Ball Base
-            ctx.beginPath();
-            ctx.arc(0, 0, ballOrigin.radius, 0, Math.PI * 2);
-            ctx.fillStyle = streak >= 3 ? '#ff4400' : '#e66000';
-            ctx.fill();
-            ctx.strokeStyle = '#111111';
-            ctx.lineWidth = 2.2;
-            ctx.stroke();
-
-            // Basketball Black Lines
-            ctx.beginPath();
-            ctx.moveTo(-ballOrigin.radius, 0);
-            ctx.lineTo(ballOrigin.radius, 0);
-            ctx.arc(0, 0, ballOrigin.radius, -Math.PI / 3, Math.PI / 3);
-            ctx.stroke();
-
-            ctx.restore();
-
-            // Draw Floating Score Texts
             floatingTexts.forEach(ft => {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, ft.alpha);
-                ctx.fillStyle = ft.color;
-                ctx.font = 'bold 24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText(ft.text, ft.x, ft.y);
-                ctx.restore();
+                ctx.save(); ctx.globalAlpha = Math.max(0, ft.alpha); ctx.fillStyle = ft.color;
+                ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center'; ctx.fillText(ft.text, ft.x, ft.y); ctx.restore();
             });
 
-            // Game Over Screen Overlay
+            if (!gameActive && timeLeft === 60) {
+                ctx.fillStyle = 'rgba(10, 10, 18, 0.6)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px Arial'; ctx.textAlign = 'center';
+                ctx.fillText('CLICK "START GAME" TO PLAY!', canvas.width / 2, canvas.height / 2);
+            }
             if (!gameActive && timeLeft === 0) {
-                ctx.fillStyle = 'rgba(10, 10, 18, 0.85)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 38px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('TIME UP!', canvas.width / 2, canvas.height / 2 - 25);
-                ctx.fillStyle = '#ff3344';
-                ctx.font = 'bold 24px Arial';
-                ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 15);
+                ctx.fillStyle = 'rgba(10, 10, 18, 0.85)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 36px Arial'; ctx.textAlign = 'center';
+                ctx.fillText('TIME UP!', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.fillStyle = '#ff3344'; ctx.font = 'bold 24px Arial';
+                ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
             }
         }
 
-        function gameLoop() {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-
-        restartBtn.addEventListener('click', () => {
-            initAudio();
-            startGame();
-        });
-
-        // Start render loop
+        function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
+        startBtn.addEventListener('click', startGame);
         gameLoop();
+
+        /* 2. SPORTS WORDLE GAME ENGINE */
+        (function() {
+            const SPORTS_WORDS = [
+                { word: 'SWISH', clue: 'A basketball shot that goes in without touching the rim.' },
+                { word: 'DRAFT', clue: 'Annual event where teams select prospective new players.' },
+                { word: 'ARENA', clue: 'A large stadium where indoor games take place.' },
+                { word: 'CHAMP', clue: 'Short for the winner of a sports title or tournament.' },
+                { word: 'COURT', clue: 'The playing surface for basketball and tennis.' },
+                { word: 'TOUCH', clue: 'A key component in football for scoring six points.' },
+                { word: 'FIELD', clue: 'Grass or turf playing area for soccer and football.' },
+                { word: 'COACH', clue: 'The leader who designs tactics and guides the team.' },
+                { word: 'SQUAD', clue: 'A group of teammates competing together.' },
+                { word: 'ROSTER', clue: 'The official list of active players on a team.' },
+                { word: 'SPEED', clue: 'Crucial athletic quality measured in sprints and dashes.' },
+                { word: 'MATCH', clue: 'A competitive game played between two opponents.' },
+                { word: 'PITCH', clue: 'Throw made by a baseball player or soccer field in UK.' },
+                { word: 'CATCH', clue: 'Securing a ball passed through the air.' },
+                { word: 'SCORE', clue: 'The total points earned in a contest.' },
+                { word: 'GUARD', clue: 'A basketball position that directs the team offense.' },
+                { word: 'FOULS', clue: 'Illegal actions penalized by the referee.' },
+                { word: 'BLITZ', clue: 'An aggressive defensive rush in football.' },
+                { word: 'RIVAL', clue: 'An opposing team or fierce competitor.' },
+                { word: 'TRACK', clue: 'Running surface for foot races and field events.' }
+            ];
+
+            let targetObj = {};
+            let currentGuess = '';
+            let guesses = [];
+            let isGameOver = false;
+
+            let stats = { played: 0, wins: 0, streak: 0, best: 0 };
+            try {
+                const saved = JSON.parse(localStorage.getItem('alec_wordle_stats'));
+                if (saved) stats = saved;
+            } catch(e) {}
+
+            const gridEl = document.getElementById('wordleGrid');
+            const kbEl = document.getElementById('keyboard');
+            const toastEl = document.getElementById('wordleToast');
+            const clueEl = document.getElementById('clueBox');
+
+            function updateStatsUI() {
+                document.getElementById('wPlayed').textContent = stats.played;
+                document.getElementById('wWins').textContent = stats.wins;
+                document.getElementById('wStreak').textContent = stats.streak;
+                document.getElementById('wBest').textContent = stats.best;
+                try { localStorage.setItem('alec_wordle_stats', JSON.stringify(stats)); } catch(e) {}
+            }
+
+            function initGrid() {
+                gridEl.innerHTML = '';
+                for (let r = 0; r < 6; r++) {
+                    const row = document.createElement('div');
+                    row.className = 'wordle-row';
+                    row.id = 'row-' + r;
+                    for (let c = 0; c < 5; c++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'wordle-cell';
+                        cell.id = `cell-${r}-${c}`;
+                        row.appendChild(cell);
+                    }
+                    gridEl.appendChild(row);
+                }
+            }
+
+            function initKeyboard() {
+                const layout = [
+                    ['Q','W','E','R','T','Y','U','I','O','P'],
+                    ['A','S','D','F','G','H','J','K','L'],
+                    ['ENTER','Z','X','C','V','B','N','M','DEL']
+                ];
+                kbEl.innerHTML = '';
+                layout.forEach(rowKeys => {
+                    const rDiv = document.createElement('div');
+                    rDiv.className = 'keyboard-row';
+                    rowKeys.forEach(key => {
+                        const btn = document.createElement('button');
+                        btn.className = 'key' + (key.length > 1 ? ' wide' : '');
+                        btn.textContent = key;
+                        btn.id = 'key-' + key;
+                        btn.addEventListener('click', () => handleKeyPress(key));
+                        rDiv.appendChild(btn);
+                    });
+                    kbEl.appendChild(rDiv);
+                });
+            }
+
+            function startNewWordle() {
+                targetObj = SPORTS_WORDS[Math.floor(Math.random() * SPORTS_WORDS.length)];
+                currentGuess = '';
+                guesses = [];
+                isGameOver = false;
+
+                clueEl.style.display = 'none';
+                clueEl.textContent = '';
+                toastEl.textContent = 'Guess 1 of 6';
+
+                initGrid();
+                initKeyboard();
+                updateStatsUI();
+            }
+
+            function handleKeyPress(key) {
+                if (isGameOver) return;
+
+                if (key === 'ENTER') {
+                    submitGuess();
+                } else if (key === 'DEL' || key === 'BACKSPACE') {
+                    if (currentGuess.length > 0) {
+                        currentGuess = currentGuess.slice(0, -1);
+                        updateCurrentRow();
+                    }
+                } else if (/^[A-Z]$/.test(key)) {
+                    if (currentGuess.length < 5) {
+                        currentGuess += key;
+                        updateCurrentRow();
+                    }
+                }
+            }
+
+            function updateCurrentRow() {
+                const rowIndex = guesses.length;
+                for (let c = 0; c < 5; c++) {
+                    const cell = document.getElementById(`cell-${rowIndex}-${c}`);
+                    const char = currentGuess[c] || '';
+                    if (cell.textContent !== char) {
+                        cell.textContent = char;
+                        if (char) cell.classList.add('pop');
+                        else cell.classList.remove('pop');
+                    }
+                }
+            }
+
+            function submitGuess() {
+                if (currentGuess.length < 5) {
+                    const activeRow = document.getElementById(`row-${guesses.length}`);
+                    activeRow.classList.add('shake');
+                    setTimeout(() => activeRow.classList.remove('shake'), 400);
+                    toastEl.textContent = 'Not enough letters!';
+                    return;
+                }
+
+                const guess = currentGuess;
+                guesses.push(guess);
+                const rowIndex = guesses.length - 1;
+                const target = targetObj.word;
+
+                const targetArr = target.split('');
+                const guessArr = guess.split('');
+                const statuses = Array(5).fill('absent');
+
+                for (let i = 0; i < 5; i++) {
+                    if (guessArr[i] === targetArr[i]) {
+                        statuses[i] = 'correct';
+                        targetArr[i] = null;
+                    }
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    if (statuses[i] === 'absent') {
+                        const foundIdx = targetArr.indexOf(guessArr[i]);
+                        if (foundIdx !== -1) {
+                            statuses[i] = 'present';
+                            targetArr[foundIdx] = null;
+                        }
+                    }
+                }
+
+                for (let c = 0; c < 5; c++) {
+                    const cell = document.getElementById(`cell-${rowIndex}-${c}`);
+                    setTimeout(() => {
+                        cell.classList.add('flip');
+                        cell.classList.add(statuses[c]);
+
+                        const kBtn = document.getElementById('key-' + guessArr[c]);
+                        if (kBtn) {
+                            if (statuses[c] === 'correct') {
+                                kBtn.className = 'key correct' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            } else if (statuses[c] === 'present' && !kBtn.classList.contains('correct')) {
+                                kBtn.className = 'key present' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            } else if (!kBtn.classList.contains('correct') && !kBtn.classList.contains('present')) {
+                                kBtn.className = 'key absent' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            }
+                        }
+                    }, c * 100);
+                }
+
+                setTimeout(() => {
+                    if (guess === target) {
+                        isGameOver = true;
+                        toastEl.textContent = '🎉 WINNER! Word: ' + target;
+                        stats.played++;
+                        stats.wins++;
+                        stats.streak++;
+                        if (stats.streak > stats.best) stats.best = stats.streak;
+                        updateStatsUI();
+                    } else if (guesses.length === 6) {
+                        isGameOver = true;
+                        toastEl.textContent = 'Game Over! Word was: ' + target;
+                        stats.played++;
+                        stats.streak = 0;
+                        updateStatsUI();
+                    } else {
+                        currentGuess = '';
+                        toastEl.textContent = `Guess ${guesses.length + 1} of 6`;
+                    }
+                }, 600);
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') handleKeyPress('DEL');
+                else if (e.key === 'Enter') handleKeyPress('ENTER');
+                else {
+                    const k = e.key.toUpperCase();
+                    if (/^[A-Z]$/.test(k)) handleKeyPress(k);
+                }
+            });
+
+            document.getElementById('wNewBtn').addEventListener('click', startNewWordle);
+            document.getElementById('wHintBtn').addEventListener('click', () => {
+                clueEl.textContent = '💡 Clue: ' + targetObj.clue;
+                clueEl.style.display = 'block';
+            });
+
+            startNewWordle();
+        })();
     </script>
 
 </body>
