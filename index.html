@@ -573,4 +573,579 @@
                 if (type === 'swish') {
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(500, now);
-                    osc.frequency.exponentialRampToValueAtTime(1200, now
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now); osc.stop(now + 0.15);
+                } else if (type === 'bounce') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now); osc.stop(now + 0.1);
+                } else if (type === 'score') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now); osc.stop(now + 0.25);
+                }
+            } catch(e) {}
+        }
+
+        const ballOrigin = { x: 130, y: 310, radius: 18 };
+        let ball = { x: ballOrigin.x, y: ballOrigin.y, vx: 0, vy: 0, isDragging: false, isFlying: false, scored: false, touchedRim: false };
+        const hoop = { x: 540, y: 165, width: 60, height: 8, backboardX: 600, backboardY: 70, backboardW: 14, backboardH: 120 };
+        const gravity = 0.45;
+        let floatingTexts = [];
+
+        function addScoreText(txt, x, y, col) {
+            floatingTexts.push({ text: txt, x: x, y: y, alpha: 1.0, color: col });
+        }
+
+        function getCanvasPos(evt) {
+            const rect = canvas.getBoundingClientRect();
+            if (!rect.width || !rect.height) return { x: ballOrigin.x, y: ballOrigin.y };
+            return {
+                x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+                y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function handleStart(e) {
+            initAudio();
+            if (!gameActive) {
+                startGame();
+            }
+            if (ball.isFlying) return;
+
+            const pos = getCanvasPos(e);
+            ball.isDragging = true;
+            ball.x = pos.x; 
+            ball.y = pos.y;
+        }
+
+        function handleMove(e) {
+            if (!ball.isDragging) return;
+            const pos = getCanvasPos(e);
+            const dx = pos.x - ballOrigin.x;
+            const dy = pos.y - ballOrigin.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 120) {
+                const angle = Math.atan2(dy, dx);
+                ball.x = ballOrigin.x + Math.cos(angle) * 120;
+                ball.y = ballOrigin.y + Math.sin(angle) * 120;
+            } else {
+                ball.x = pos.x; ball.y = pos.y;
+            }
+        }
+
+        function handleEnd() {
+            if (!ball.isDragging) return;
+            ball.isDragging = false;
+            ball.isFlying = true;
+
+            const targetX = hoop.x + hoop.width / 2;
+            const targetY = hoop.y - 5;
+            const timeSteps = 45;
+
+            ball.vx = (targetX - ball.x) / timeSteps;
+            ball.vy = (targetY - ball.y - 0.5 * gravity * timeSteps * timeSteps) / timeSteps;
+        }
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+
+        canvas.addEventListener('touchstart', (e) => { 
+            if (e.touches.length) handleStart(e.touches[0]); 
+        }, { passive: true });
+        
+        canvas.addEventListener('touchmove', (e) => { 
+            if (e.touches.length) handleMove(e.touches[0]); 
+        }, { passive: true });
+
+        window.addEventListener('touchend', handleEnd);
+
+        function startGame() {
+            initAudio();
+            score = 0; 
+            streak = 0; 
+            timeLeft = 60; 
+            gameActive = true;
+            scoreEl.textContent = score; 
+            streakEl.textContent = streak; 
+            timerEl.textContent = timeLeft;
+            startBtn.textContent = "Restart Game";
+            resetBall();
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    gameActive = false;
+                    clearInterval(timerInterval);
+                    if (score > highScore) {
+                        highScore = score;
+                        try { localStorage.setItem('alec_bb_hs', highScore); } catch(e) {}
+                        highScoreEl.textContent = highScore;
+                    }
+                }
+            }, 1000);
+        }
+
+        function resetBall() {
+            ball.x = ballOrigin.x; 
+            ball.y = ballOrigin.y;
+            ball.vx = 0; 
+            ball.vy = 0;
+            ball.isDragging = false; 
+            ball.isFlying = false;
+            ball.scored = false; 
+            ball.touchedRim = false;
+        }
+
+        function update() {
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                let ft = floatingTexts[i];
+                ft.y -= 1; ft.alpha -= 0.02;
+                if (ft.alpha <= 0) floatingTexts.splice(i, 1);
+            }
+            if (ball.isFlying) {
+                ball.x += ball.vx; ball.y += ball.vy; ball.vy += gravity;
+
+                if (!ball.scored && ball.vy > 0 && ball.x > hoop.x + 2 && ball.x < hoop.x + hoop.width - 2 && ball.y > hoop.y - 6 && ball.y < hoop.y + hoop.height + 15) {
+                    ball.scored = true;
+                    if (gameActive) {
+                        streak++; streakEl.textContent = streak;
+                        let pts = 3, label = "SWISH! +3";
+                        playSound('swish');
+                        if (streak >= 3) { pts *= 2; label += " 🔥 x2"; }
+                        score += pts; scoreEl.textContent = score;
+                        addScoreText(label, hoop.x + 30, hoop.y - 15, streak >= 3 ? '#ff3300' : '#ffeb3b');
+                    }
+                }
+
+                if (ball.y > canvas.height + 40 || ball.x > canvas.width + 50 || ball.x < -50) {
+                    if (!ball.scored) { streak = 0; streakEl.textContent = streak; }
+                    resetBall();
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#b33923'; ctx.fillRect(0, 380, canvas.width, 40);
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 377, canvas.width, 3);
+            ctx.fillStyle = '#444455'; ctx.fillRect(hoop.backboardX + 4, hoop.backboardY + hoop.backboardH, 8, canvas.height - hoop.backboardY);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; ctx.fillRect(hoop.backboardX, hoop.backboardY, hoop.backboardW, hoop.backboardH);
+            ctx.strokeStyle = '#cc0000'; ctx.lineWidth = 3; ctx.strokeRect(hoop.backboardX + 2, hoop.backboardY + 32, 10, 42);
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(hoop.x, hoop.y); ctx.lineTo(hoop.x + 10, hoop.y + 36); ctx.lineTo(hoop.x + hoop.width - 10, hoop.y + 36); ctx.lineTo(hoop.x + hoop.width, hoop.y); ctx.stroke();
+            ctx.fillStyle = '#ff5500'; ctx.fillRect(hoop.x - 4, hoop.y - 2, hoop.width + 8, hoop.height);
+
+            if (ball.isDragging) {
+                const targetX = hoop.x + hoop.width / 2;
+                const targetY = hoop.y - 5;
+                const timeSteps = 45;
+                let simX = ball.x;
+                let simY = ball.y;
+                let simVx = (targetX - ball.x) / timeSteps;
+                let simVy = (targetY - ball.y - 0.5 * gravity * timeSteps * timeSteps) / timeSteps;
+
+                ctx.fillStyle = '#ff3344';
+                for (let i = 0; i < 20; i++) {
+                    simX += simVx; simY += simVy; simVy += gravity;
+                    ctx.beginPath(); ctx.arc(simX, simY, 3, 0, Math.PI * 2); ctx.fill();
+                }
+            }
+
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ballOrigin.radius, 0, Math.PI * 2);
+            ctx.fillStyle = streak >= 3 ? '#ff4400' : '#e66000'; ctx.fill();
+            ctx.strokeStyle = '#111111'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ballOrigin.radius, -Math.PI / 3, Math.PI / 3); ctx.stroke();
+
+            floatingTexts.forEach(ft => {
+                ctx.save(); ctx.globalAlpha = Math.max(0, ft.alpha); ctx.fillStyle = ft.color;
+                ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center'; ctx.fillText(ft.text, ft.x, ft.y); ctx.restore();
+            });
+
+            if (!gameActive && timeLeft === 60) {
+                ctx.fillStyle = 'rgba(10, 10, 18, 0.65)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 28px Arial'; ctx.textAlign = 'center';
+                ctx.fillText('CLICK ANYWHERE TO START!', canvas.width / 2, canvas.height / 2);
+            }
+            if (!gameActive && timeLeft === 0) {
+                ctx.fillStyle = 'rgba(10, 10, 18, 0.85)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 36px Arial'; ctx.textAlign = 'center';
+                ctx.fillText('TIME UP!', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.fillStyle = '#ff3344'; ctx.font = 'bold 24px Arial';
+                ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 15);
+                ctx.fillStyle = '#aaaaaa'; ctx.font = '18px Arial';
+                ctx.fillText('Click anywhere to play again', canvas.width / 2, canvas.height / 2 + 45);
+            }
+        }
+
+        function gameLoop() { update(); draw(); requestAnimationFrame(gameLoop); }
+        startBtn.addEventListener('click', startGame);
+        gameLoop();
+
+        /* 2. SPORTS REFLEX SPEED ENGINE */
+        (function() {
+            const box = document.getElementById('reflexBox');
+            const mainText = document.getElementById('reflexText');
+            const subText = document.getElementById('reflexSubtext');
+            const lastEl = document.getElementById('refLast');
+            const bestEl = document.getElementById('refBest');
+            const rankEl = document.getElementById('refRank');
+
+            let state = 'idle'; // 'idle', 'waiting', 'ready'
+            let startTime = 0;
+            let timerId = null;
+            let bestTime = parseInt(localStorage.getItem('alec_reflex_best')) || 9999;
+
+            if (bestTime < 9999) bestEl.textContent = bestTime;
+
+            function getRank(ms) {
+                if (ms < 200) return '⚡ GOAT';
+                if (ms < 270) return '🔥 All-Star';
+                if (ms < 350) return '🏀 Rookie';
+                return '🐢 Goofy Ahh';
+            }
+
+            box.addEventListener('click', () => {
+                if (state === 'idle') {
+                    state = 'waiting';
+                    box.className = 'reflex-box ready';
+                    mainText.textContent = 'WAIT FOR GREEN...';
+                    subText.textContent = 'Get ready to tap as fast as possible!';
+                    
+                    const delay = 1500 + Math.random() * 2500;
+                    timerId = setTimeout(() => {
+                        state = 'ready';
+                        startTime = Date.now();
+                        box.className = 'reflex-box go';
+                        mainText.textContent = 'TAP NOW!';
+                        subText.textContent = 'CLICK AS FAST AS YOU CAN!';
+                    }, delay);
+
+                } else if (state === 'waiting') {
+                    clearTimeout(timerId);
+                    state = 'idle';
+                    box.className = 'reflex-box';
+                    mainText.textContent = 'TOO EARLY! ⚠️';
+                    subText.textContent = 'False start! Click to try again.';
+
+                } else if (state === 'ready') {
+                    const elapsed = Date.now() - startTime;
+                    state = 'idle';
+                    box.className = 'reflex-box';
+                    
+                    lastEl.textContent = elapsed;
+                    if (elapsed < bestTime) {
+                        bestTime = elapsed;
+                        bestEl.textContent = bestTime;
+                        try { localStorage.setItem('alec_reflex_best', bestTime); } catch(e) {}
+                    }
+
+                    const rank = getRank(elapsed);
+                    rankEl.textContent = rank;
+                    mainText.textContent = elapsed + ' MS!';
+                    subText.textContent = 'Rank: ' + rank + '. Click to test again!';
+                }
+            });
+        })();
+
+        /* 3. SPORTS WORDLE GAME ENGINE WITH DICTIONARY VALIDATION */
+        (function() {
+            const SPORTS_WORDS = [
+                { word: 'SWISH', clue: 'A basketball shot that goes in without touching the rim.' },
+                { word: 'DRAFT', clue: 'Annual event where teams select prospective new players.' },
+                { word: 'ARENA', clue: 'A large stadium where indoor games take place.' },
+                { word: 'CHAMP', clue: 'Short for the winner of a sports title or tournament.' },
+                { word: 'COURT', clue: 'The playing surface for basketball and tennis.' },
+                { word: 'TOUCH', clue: 'A key component in football for scoring six points.' },
+                { word: 'FIELD', clue: 'Grass or turf playing area for soccer and football.' },
+                { word: 'COACH', clue: 'The leader who designs tactics and guides the team.' },
+                { word: 'SQUAD', clue: 'A group of teammates competing together.' },
+                { word: 'ROSTER', clue: 'The official list of active players on a team.' },
+                { word: 'SPEED', clue: 'Crucial athletic quality measured in sprints and dashes.' },
+                { word: 'MATCH', clue: 'A competitive game played between two opponents.' },
+                { word: 'PITCH', clue: 'Throw made by a baseball player or soccer field in UK.' },
+                { word: 'CATCH', clue: 'Securing a ball passed through the air.' },
+                { word: 'SCORE', clue: 'The total points earned in a contest.' },
+                { word: 'GUARD', clue: 'A basketball position that directs the team offense.' },
+                { word: 'FOULS', clue: 'Illegal actions penalized by the referee.' },
+                { word: 'BLITZ', clue: 'An aggressive defensive rush in football.' },
+                { word: 'RIVAL', clue: 'An opposing team or fierce competitor.' },
+                { word: 'TRACK', clue: 'Running surface for foot races and field events.' }
+            ];
+
+            const DICTIONARY = new Set([
+                'SWISH','DRAFT','ARENA','CHAMP','COURT','TOUCH','FIELD','COACH','SQUAD','ROSTER',
+                'SPEED','MATCH','PITCH','CATCH','SCORE','GUARD','FOULS','BLITZ','RIVAL','TRACK',
+                'ABOUT','ABOVE','ABUSE','ACTOR','ACUTE','ADMIT','ADOPT','ADULT','AFTER','AGAIN',
+                'AGENT','AGREE','AHEAD','ALARM','ALBUM','ALERT','ALIEN','ALIGN','ALIKE','ALIVE',
+                'ALLOW','ALONG','ALTER','AMONG','ANGER','ANGLE','ANGRY','APART','APPLE','APPLY',
+                'ARGUE','ARISE','ARRAY','ARROW','ASIDE','ASSET','AUDIO','AUDIT','AVOID','AWARD',
+                'AWARE','BADLY','BAKER','BASES','BASIC','BASIS','BEACH','BEARD','BEAST','BEGIN',
+                'BEING','BELOW','BENCH','BLACK','BLAME','BLANK','BLAST','BLEED','BLEND','BLESS',
+                'BLIND','BLOCK','BLOOD','BLOOM','BOARD','BOAST','BOOST','BOOTH','BOUND','BRAIN',
+                'BRAND','BREAD','BREAK','BREED','BRICK','BRIDE','BRIEF','BRING','BROAD','BROWN',
+                'BRUSH','BUILD','BUNCH','BUYER','CABLE','CANDY','CARDS','CARRY','CAUSE','CHAIN',
+                'CHAIR','CHALK','CHARM','CHART','CHASE','CHEAP','CHECK','CHEST','CHIEF','CHILD',
+                'CHINA','CHOSE','CIVIL','CLAIM','CLASS','CLEAN','CLEAR','CLIMB','CLOCK','CLOSE',
+                'CLOTH','CLOUD','CLUBS','COUNT','COVER','CRASH','CRAZY','CREAM','CRIME','CROSS',
+                'CROWD','CROWN','CRUDE','CRUEL','CRUSH','CYCLE','DAILY','DANCE','DATED','DEALT',
+                'DEATH','DEBUT','DELAY','DEPTH','DEVIL','DIRTY','DISCO','DOUBT','DRAIN','DRAMA',
+                'DREAM','DRESS','DRINK','DRIVE','EARLY','EARTH','EIGHT','ELECT','ELITE','EMPTY',
+                'ENEMY','ENJOY','ENTER','EQUAL','ERROR','EVENT','EVERY','EXACT','EXIST','EXTRA',
+                'FAITH','FALSE','FANCY','FATAL','FAULT','FIBER','FIFTH','FIFTY','FIGHT','FINAL',
+                'FIRST','FLAME','FLASH','FLEET','FLOAT','FLOOD','FLOOR','FLUID','FOCUS','FORCE',
+                'FORTH','FORTY','FOUND','FRAME','FRESH','FRONT','FRUIT','FUNNY','GIANT','GIVEN',
+                'GLASS','GLOBE','GLORY','GOALS','GRACE','GRADE','GRAND','GRANT','GRAPH','GRASP',
+                'GRASS','GREAT','GREEN','GROSS','GROUP','GROWN','GUESS','GUEST','GUIDE','HAPPY',
+                'HEAVY','HELLO','HORSE','HOTEL','HOUSE','HUMAN','HUMOR','IDEAL','IMAGE','INDEX',
+                'INNER','INPUT','ISSUE','JAPAN','JOINT','JUDGE','JUICE','JUMPED','KNIFE','KNOCK',
+                'KNOWN','LABEL','LABOR','LARGE','LASER','LATER','LAUGH','LAYER','LEARN','LEASE',
+                'LEAST','LEMON','LEVEL','LIGHT','LIMIT','LINKS','LIONS','LOCAL','LOGIC','LUCKY',
+                'MAGIC','MAJOR','MAKER','MARCH','METAL','MODEL','MONEY','MONTH','MOTOR','MOUNT',
+                'MOUSE','MOUTH','MOVIE','MUSIC','NEVER','NIGHT','NOISE','NORTH','NOVEL','NURSE',
+                'OFFER','OFTEN','ORDER','OTHER','OUTER','OWNER','PANEL','PAPER','PARTY','PEACE',
+                'PHASE','PHONE','PHOTO','PIECE','PILOT','PLACE','PLAIN','PLANE','PLANT','PLATE',
+                'POINT','POWER','PRESS','PRICE','PRIDE','PRIME','PRINT','PRIZE','PROOF','PROUD',
+                'PROVE','QUEEN','QUICK','QUIET','QUITE','RADIO','RAISE','RANGE','RAPID','RATIO',
+                'REACH','REACT','READY','REALM','REFER','RIGHT','RIVER','ROBIN','ROUGH','ROUND',
+                'ROUTE','ROYAL','RULER','SCALE','SCENE','SCOPE','SENSE','SERVE','SEVEN','SHADE',
+                'SHAKE','SHALL','SHAPE','SHARE','SHARP','SHEET','SHELF','SHELL','SHIFT','SHINE',
+                'SHIRT','SHOCK','SHOOT','SHORT','SHOWN','SIGHT','SINCE','SIXTH','SIXTY','SKILL',
+                'SLEEP','SLIDE','SMALL','SMART','SMILE','SMOKE','SOLID','SOLVE','SORRY','SOUND',
+                'SOUTH','SPACE','SPARE','SPEAK','SPEND','SPLIT','SPOKE','SPORT','STAFF','STAGE',
+                'STAKE','STAND','START','STATE','STEAM','STEEL','STICK','STILL','STOCK','STONE',
+                'STORE','STORM','STORY','STRIP','STUCK','STUDY','STUFF','STYLE','SUGAR','SUITE',
+                'SUPER','SWEET','TABLE','TAKEN','TASTE','TAXES','TEACH','TEETH','TEXAS','THANK',
+                'THEFT','THEIR','THEME','THERE','THESE','THICK','THING','THINK','THIRD','THOSE',
+                'THREE','THROW','TIGHT','TIMES','TITLE','TODAY','TOPIC','TOTAL','TOWER','TRADE',
+                'TRAIN','TREAT','TREND','TRIAL','TRIED','TRIBE','TRUCK','TRULY','TRUST','TRUTH',
+                'TWICE','UNDER','UNION','UNITY','UNTIL','UPPER','UPSET','URBAN','USAGE','USUAL',
+                'VALID','VALUE','VIDEO','VIRUS','VISIT','VITAL','VOICE','WASTE','WATCH','WATER',
+                'WHEEL','WHERE','WHICH','WHILE','WHITE','WHOLE','WHOSE','WOMAN','WORLD','WORRY',
+                'WORSE','WORST','WORTH','WOULD','WRITE','WRONG','YOUTH'
+            ]);
+
+            let targetObj = {};
+            let currentGuess = '';
+            let guesses = [];
+            let isGameOver = false;
+
+            let stats = { played: 0, wins: 0, streak: 0, best: 0 };
+            try {
+                const saved = JSON.parse(localStorage.getItem('alec_wordle_stats'));
+                if (saved) stats = saved;
+            } catch(e) {}
+
+            const gridEl = document.getElementById('wordleGrid');
+            const kbEl = document.getElementById('keyboard');
+            const toastEl = document.getElementById('wordleToast');
+            const clueEl = document.getElementById('clueBox');
+
+            function updateStatsUI() {
+                document.getElementById('wPlayed').textContent = stats.played;
+                document.getElementById('wWins').textContent = stats.wins;
+                document.getElementById('wStreak').textContent = stats.streak;
+                document.getElementById('wBest').textContent = stats.best;
+                try { localStorage.setItem('alec_wordle_stats', JSON.stringify(stats)); } catch(e) {}
+            }
+
+            function initGrid() {
+                gridEl.innerHTML = '';
+                for (let r = 0; r < 6; r++) {
+                    const row = document.createElement('div');
+                    row.className = 'wordle-row';
+                    row.id = 'row-' + r;
+                    for (let c = 0; c < 5; c++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'wordle-cell';
+                        cell.id = `cell-${r}-${c}`;
+                        row.appendChild(cell);
+                    }
+                    gridEl.appendChild(row);
+                }
+            }
+
+            function initKeyboard() {
+                const layout = [
+                    ['Q','W','E','R','T','Y','U','I','O','P'],
+                    ['A','S','D','F','G','H','J','K','L'],
+                    ['ENTER','Z','X','C','V','B','N','M','DEL']
+                ];
+                kbEl.innerHTML = '';
+                layout.forEach(rowKeys => {
+                    const rDiv = document.createElement('div');
+                    rDiv.className = 'keyboard-row';
+                    rowKeys.forEach(key => {
+                        const btn = document.createElement('button');
+                        btn.className = 'key' + (key.length > 1 ? ' wide' : '');
+                        btn.textContent = key;
+                        btn.id = 'key-' + key;
+                        btn.addEventListener('click', () => handleKeyPress(key));
+                        rDiv.appendChild(btn);
+                    });
+                    kbEl.appendChild(rDiv);
+                });
+            }
+
+            function startNewWordle() {
+                targetObj = SPORTS_WORDS[Math.floor(Math.random() * SPORTS_WORDS.length)];
+                currentGuess = '';
+                guesses = [];
+                isGameOver = false;
+
+                clueEl.style.display = 'none';
+                clueEl.textContent = '';
+                toastEl.textContent = 'Guess 1 of 6';
+
+                initGrid();
+                initKeyboard();
+                updateStatsUI();
+            }
+
+            function handleKeyPress(key) {
+                if (isGameOver) return;
+
+                if (key === 'ENTER') {
+                    submitGuess();
+                } else if (key === 'DEL' || key === 'BACKSPACE') {
+                    if (currentGuess.length > 0) {
+                        currentGuess = currentGuess.slice(0, -1);
+                        updateCurrentRow();
+                    }
+                } else if (/^[A-Z]$/.test(key)) {
+                    if (currentGuess.length < 5) {
+                        currentGuess += key;
+                        updateCurrentRow();
+                    }
+                }
+            }
+
+            function updateCurrentRow() {
+                const rowIndex = guesses.length;
+                for (let c = 0; c < 5; c++) {
+                    const cell = document.getElementById(`cell-${rowIndex}-${c}`);
+                    const char = currentGuess[c] || '';
+                    if (cell.textContent !== char) {
+                        cell.textContent = char;
+                        if (char) cell.classList.add('pop');
+                        else cell.classList.remove('pop');
+                    }
+                }
+            }
+
+            function submitGuess() {
+                if (currentGuess.length < 5) {
+                    const activeRow = document.getElementById(`row-${guesses.length}`);
+                    activeRow.classList.add('shake');
+                    setTimeout(() => activeRow.classList.remove('shake'), 400);
+                    toastEl.textContent = 'Not enough letters!';
+                    return;
+                }
+
+                if (!DICTIONARY.has(currentGuess)) {
+                    const activeRow = document.getElementById(`row-${guesses.length}`);
+                    activeRow.classList.add('shake');
+                    setTimeout(() => activeRow.classList.remove('shake'), 400);
+                    toastEl.textContent = 'Not in word list!';
+                    return;
+                }
+
+                const guess = currentGuess;
+                guesses.push(guess);
+                const rowIndex = guesses.length - 1;
+                const target = targetObj.word;
+
+                const targetArr = target.split('');
+                const guessArr = guess.split('');
+                const statuses = Array(5).fill('absent');
+
+                for (let i = 0; i < 5; i++) {
+                    if (guessArr[i] === targetArr[i]) {
+                        statuses[i] = 'correct';
+                        targetArr[i] = null;
+                    }
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    if (statuses[i] === 'absent') {
+                        const foundIdx = targetArr.indexOf(guessArr[i]);
+                        if (foundIdx !== -1) {
+                            statuses[i] = 'present';
+                            targetArr[foundIdx] = null;
+                        }
+                    }
+                }
+
+                for (let c = 0; c < 5; c++) {
+                    const cell = document.getElementById(`cell-${rowIndex}-${c}`);
+                    setTimeout(() => {
+                        cell.classList.add('flip');
+                        cell.classList.add(statuses[c]);
+
+                        const kBtn = document.getElementById('key-' + guessArr[c]);
+                        if (kBtn) {
+                            if (statuses[c] === 'correct') {
+                                kBtn.className = 'key correct' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            } else if (statuses[c] === 'present' && !kBtn.classList.contains('correct')) {
+                                kBtn.className = 'key present' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            } else if (!kBtn.classList.contains('correct') && !kBtn.classList.contains('present')) {
+                                kBtn.className = 'key absent' + (kBtn.textContent.length > 1 ? ' wide' : '');
+                            }
+                        }
+                    }, c * 100);
+                }
+
+                setTimeout(() => {
+                    if (guess === target) {
+                        isGameOver = true;
+                        toastEl.textContent = '🎉 WINNER! Word: ' + target;
+                        stats.played++;
+                        stats.wins++;
+                        stats.streak++;
+                        if (stats.streak > stats.best) stats.best = stats.streak;
+                        updateStatsUI();
+                    } else if (guesses.length === 6) {
+                        isGameOver = true;
+                        toastEl.textContent = 'Game Over! Word was: ' + target;
+                        stats.played++;
+                        stats.streak = 0;
+                        updateStatsUI();
+                    } else {
+                        currentGuess = '';
+                        toastEl.textContent = `Guess ${guesses.length + 1} of 6`;
+                    }
+                }, 600);
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') handleKeyPress('DEL');
+                else if (e.key === 'Enter') handleKeyPress('ENTER');
+                else {
+                    const k = e.key.toUpperCase();
+                    if (/^[A-Z]$/.test(k)) handleKeyPress(k);
+                }
+            });
+
+            document.getElementById('wNewBtn').addEventListener('click', startNewWordle);
+            document.getElementById('wHintBtn').addEventListener('click', () => {
+                clueEl.textContent = '💡 Clue: ' + targetObj.clue;
+                clueEl.style.display = 'block';
+            });
+
+            startNewWordle();
+        })();
+    </script>
+</body>
+</html>
